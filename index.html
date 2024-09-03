@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- css link -->
-     <link rel="stylesheet" href="./style.css">
 
-     <!-- fontawesome cdn -->
-     <script src="https://kit.fontawesome.com/bb01d016fb.js" crossorigin="anonymous"></script>
+
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- css link -->
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- fontawesome cdn -->
+    <script src="https://kit.fontawesome.com/bb01d016fb.js" crossorigin="anonymous"></script>
     <title>Weather App</title>
 </head>
+
 <body>
 
     <!-- card -->
-     <div class="card">
+    <div class="card">
         <div class="search">
             <input type="text" placeholder="Enter city name" spellcheck="false">
             <button><i class="fa-solid fa-magnifying-glass icon"></i></button>
@@ -21,10 +32,65 @@
 
         <div class="weather">
             <img src="./images/rain.png" class="weather-icon" alt="">
-            <h1 class="temp" >22°C</h1>
+            <h1 class="temp">22°c</h1>
             <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img class="icons" src="./images/humidity.png" alt="">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img class="icons" src="./images/Wind.png" alt="">
+                    <div>
+                        <p class="wind">15 km/h</p>
+                        <p>wind speed</p>
+                    </div>
+                </div>
+            </div>
         </div>
-     </div>
-    
+    </div>
+
+
+    <script>
+        const apiKey = "03902815db011f6682202cb1baa0867c";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+
+        const searchbox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+
+        async function checkWeather(city) {
+            if (!city) {
+                console.error('City name is required');
+                return;
+            }
+
+
+            const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+            if (!response.ok) {
+                console.error('Failed to fetch weather data:', response.statusText);
+                return;
+            }
+            var data = await response.json();
+            console.log(data);
+
+            document.querySelector(".city").innerHTML = data.name;
+            document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
+            document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+        }
+
+        searchBtn.addEventListener("click", ()=>{
+            checkWeather(searchbox.value);
+            
+        });
+
+       
+    </script>
+
 </body>
+
 </html>
